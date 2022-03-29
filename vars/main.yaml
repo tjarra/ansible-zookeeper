@@ -10,4 +10,5 @@ zoo_path_bin: "{{ zoo_path_base }}/zookeeper"
 zoo_path_log: "/var/log/zookeeper"
 zoo_path_etc: "{{ zoo_path_bin }}/conf"
 zoo_path_systemd: "/etc/systemd/system"
+zoo_id: 1
 
