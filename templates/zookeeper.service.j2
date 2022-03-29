@@ -3,13 +3,13 @@
 
 [Service]
  Type=simple
- WorkingDirectory=/opt/zookeeper/
- PIDFile=/var/lib/zookeeper/zookeeper_server.pid
+ WorkingDirectory={{ zoo_path_bin }}
+ PIDFile={{ zoo_path_data }}/zookeeper_server.pid
  SyslogIdentifier=zookeeper
  User=zookeeper
  Group=zookeeper
- ExecStart=/opt/zookeeper/bin/zkServer.sh start
- ExecStop=/opt/zookeeper/bin/zkServer.sh stop
+ ExecStart={{ zoo_path_bin }}/bin/zkServer.sh start
+ ExecStop={{ zoo_path_bin }}/bin/zkServer.sh stop
  Restart=always
  TimeoutSec=20
  SuccessExitStatus=130 143
