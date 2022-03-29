@@ -1,0 +1,13 @@
+zoo_user: "zookeeper"
+zoo_group: "wheel"
+
+zoo_file_download: "apache-zookeeper-3.5.8-bin.tar.gz"
+zoo_version: "3.5.8-bin"
+
+zoo_path_base: "/opt"
+zoo_path_data: "/var/lib/zookeeper"
+zoo_path_bin: "{{ zoo_path_base }}/zookeeper"
+zoo_path_log: "/var/log/zookeeper"
+zoo_path_etc: "{{ zoo_path_bin }}/conf"
+zoo_path_systemd: "/etc/systemd/system"
+

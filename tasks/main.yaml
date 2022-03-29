@@ -1,0 +1,66 @@
+- name: Create Zookeeper User
+  user:
+    name: "{{ zoo_user }}"
+    groups: "{{ zoo_group }}"
+
+- name: Create datadir and logdir 
+  file:
+    path: "{{ item }}"
+    owner: "{{ zoo_user }}"
+    group: "{{ zoo_user }}"
+    mode: 0755
+    state: directory
+  with_items:
+    - "{{ zoo_path_data }}"
+    - "{{ zoo_path_log }}"
+
+- name: Check that the zoo donwload exists
+  stat:
+    path: "{{ zoo_path_base }}/apache-zookeeper-{{ zoo_version }}" 
+  register: stat_result
+
+- name: Downloading zookeeper tar
+  unarchive:
+    src: "{{ zoo_file_download }}"
+    dest: "{{ zoo_path_base }}"
+    owner: "{{ zoo_user }}"
+    group: "{{ zoo_user }}"
+  when: stat_result.stat.exists == False 
+
+- name: Change owner in zookeeper dir
+  file:
+    path: "{{ zoo_path_base }}/apache-zookeeper-{{ zoo_version }}"
+    owner: "{{ zoo_user }}"
+    group: "{{ zoo_group }}"
+    recurse: yes
+
+- name: Create simbolic link 
+  file:
+    src: "{{ zoo_path_base }}/apache-zookeeper-{{ zoo_version }}"
+    dest: "{{ zoo_path_bin }}"
+    state: link
+
+- name: Coping config file
+  template:
+    src: "{{ item.orig }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ zoo_user }}"
+    group: "{{ zoo_user }}"
+    mode: '764'
+  with_items:
+    - orig: zoo.cfg.j2
+      dest: "{{ zoo_path_etc }}/zoo.cfg"
+
+- name: Create Zookeeper myid
+  template:
+    src: myid.j2
+    dest: "{{ zoo_path_data }}/myid"
+    mode: 0555
+    owner: "{{ zoo_user }}"
+    group: "{{ zoo_user }}"
+
+- name: Create service zookeeper
+  template:
+    src: zookeeper.service.j2
+    dest: "{{ zoo_path_systemd }}/zookeeper.service"
+
